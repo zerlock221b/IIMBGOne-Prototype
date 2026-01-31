@@ -2,139 +2,774 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IIMBGOne - Ethical Campus AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIMBGOne - Campus Assistant</title>
     <style>
-        :root {
-            --primary: #1a2a3a; /* Darker navy to match logo */
-            --accent: #4ecdc4;  /* Teal/Green to match logo */
-            --bg: #ffffff;
-            --text: #333;
-            --white: #ffffff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #2c3e50; display: flex; justify-content: center; }
-
-        /* Mobile Container */
-        #phone-wrapper {
-            width: 100vw; height: 100vh; max-width: 450px;
-            background: var(--bg); position: relative; overflow: hidden;
-            display: flex; flex-direction: column;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
         }
 
-        /* Screen Header */
-        header { background: var(--primary); color: var(--white); padding: 15px; text-align: center; font-weight: bold; }
+        .phone-frame {
+            max-width: 400px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            height: 812px;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* Content Area */
-        .screen { display: none; padding: 25px; flex: 1; overflow-y: auto; animation: slideIn 0.3s ease-out; }
-        .active { display: block; }
+        .notch {
+            background: #000;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
 
-        @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .screen {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: none;
+        }
 
-        /* Logo Styling */
-        .logo-container { text-align: center; margin-bottom: 30px; margin-top: 20px; }
-        .main-logo { width: 220px; height: auto; }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* UI Elements */
-        .btn { background: var(--accent); color: var(--primary); border: none; padding: 15px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .card { background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #eee; }
-        .ethical-tag { font-size: 11px; color: #27ae60; font-weight: bold; text-transform: uppercase; margin-top: 5px; display: block; }
+        /* Screens */
+        .login-screen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
 
-        /* Navigation Bar */
-        nav { display: flex; background: var(--white); border-top: 1px solid #ddd; padding: 10px 0; }
-        nav div { flex: 1; text-align: center; font-size: 12px; cursor: pointer; color: #7f8c8d; }
+        .login-screen h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #008B8B;
+        }
+
+        .login-screen p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #008B8B;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #006666;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .checkbox-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            gap: 8px;
+        }
+
+        .checkbox-group input {
+            cursor: pointer;
+        }
+
+        /* Home Screen */
+        .home-screen {
+            padding-top: 10px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 20px;
+            color: #008B8B;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: white;
+            border: 1px solid #ddd;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            padding: 12px;
+        }
+
+        .class-info {
+            flex: 1;
+        }
+
+        .class-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .class-details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .class-time {
+            color: #008B8B;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .btn-small {
+            background: #008B8B;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .shortcuts {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .shortcut-btn {
+            flex: 1;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .shortcut-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .live-update {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #2e7d32;
+            margin-top: 10px;
+        }
+
+        /* Bot Section */
+        .bot-section {
+            margin-bottom: 15px;
+        }
+
+        .bot-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .bot-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .bot-btn {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .bot-btn.active {
+            background: #008B8B;
+            color: white;
+            border-color: #008B8B;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            margin: 8px 0;
+        }
+
+        .confirmation-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #1565c0;
+            margin-top: 8px;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: #ccc;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle.on {
+            background: #008B8B;
+        }
+
+        .toggle-dot {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+
+        .toggle.on .toggle-dot {
+            left: 24px;
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            padding: 8px 0;
+            height: 50px;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #008B8B;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Profile/Privacy Screen */
+        .profile-screen {
+            padding-top: 10px;
+        }
+
+        .profile-screen h2 {
+            font-size: 20px;
+            color: #008B8B;
+            margin-bottom: 20px;
+        }
+
+        .settings-table {
+            width: 100%;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .data-retention {
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .file-input-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px dashed #008B8B;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: #008B8B;
+            transition: all 0.3s;
+            margin: 8px 0;
+        }
+
+        .file-input-label:hover {
+            background: #e8f5f5;
+            border-color: #006666;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .no-scroll {
+            overflow: hidden;
+        }
+
+        @media (max-width: 480px) {
+            .phone-frame {
+                border-radius: 0;
+                height: auto;
+                min-height: 100vh;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="phone-frame">
+        <div class="notch">9:41</div>
 
-<div id="phone-wrapper">
-    <header id="header-title">IIMBGOne</header>
+        <!-- LOGIN SCREEN -->
+        <div class="screen login-screen active" id="loginScreen">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/8429122a-8e0f-4c1c-981c-2a21652d8b73" alt="IIMBGOne Logo" style="width: 150px; height: 150px; margin-bottom: 20px;">
+            <h1>IIMBGOne</h1>
+            <p>Ethical AI Campus Assistant</p>
+            
+            <input type="text" id="username" class="input-field" placeholder="Username or Email" style="margin-top: 20px; margin-bottom: 8px;">
+            <input type="password" id="password" class="input-field" placeholder="Password" style="margin-bottom: 20px;">
+            
+            <button class="btn" onclick="goToHome()">Sign in with Campus SSO</button>
+            
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="privacyCheck">
+                    I agree to the privacy policy
+                </label>
+            </div>
+        </div>
 
-    <div id="screen-login" class="screen active">
-        <div class="logo-container">
-            <img src="logo.jpeg" alt="IIMBGOne Logo" class="main-logo">
+        <!-- HOME SCREEN -->
+        <div class="screen home-screen" id="homeScreen">
+            <div class="header">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/8429122a-8e0f-4c1c-981c-2a21652d8b73" alt="IIMBGOne Logo" style="width: 80px; height: 80px;">
+                    <h2>HubHelp@IIMBG</h2>
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn" title="Settings">⚙️</button>
+                    <button class="icon-btn" onclick="goToProfile()">👤</button>
+                </div>
+            </div>
+
+            <!-- LEAVE REQUEST BOT -->
+            <div class="bot-section">
+                <div class="bot-title">Leave Request Bot</div>
+                <div class="bot-buttons">
+                    <button class="bot-btn" onclick="selectLeaveType('Sick')">Sick Leave</button>
+                    <button class="bot-btn" onclick="selectLeaveType('Personal')">Personal Leave</button>
+                </div>
+                <label style="font-size: 12px;">Upload Proof</label>
+                <label for="proofFile" class="file-input-label">
+                    <span>📎 Choose File</span>
+                    <input type="file" id="proofFile" class="file-input">
+                </label>
+                <button class="btn-small" style="width: 100%; margin-top: 8px;" onclick="submitLeave()">Submit</button>
+            </div>
+
+            <!-- LIBRARY SECTION - Book Search & Room Booking Combined -->
+            <div class="section">
+                <div class="section-title">Library & Resources</div>
+                <button class="btn" style="margin-bottom: 10px;" onclick="switchToLibraryTab('bookSearch')">📚 Book Search</button>
+                <button class="btn" style="margin-bottom: 10px;" onclick="switchToLibraryTab('roomBooking')">🚪 Study Room Booking</button>
+            </div>
+
+            <!-- AI BOOK SEARCH -->
+            <div class="bot-section" id="bookSearchTab" style="display: none;">
+                <div class="bot-title">AI Book Search</div>
+                <input type="text" class="input-field" id="searchBook" placeholder="Search book title...">
+                <button class="btn-small" style="width: 100%;" onclick="searchBook()">Search</button>
+                <div id="bookResult" style="margin-top: 8px; display: none;">
+                    <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;" id="bookTitle"></div>
+                    <div style="font-size: 11px; color: #666;">Author: <span id="bookAuthor"></span></div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Availability: <span id="bookAvail" style="color: #4caf50; font-weight: 600;"></span></div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Location: <span id="bookLoc"></span></div>
+                    <button class="btn-small" style="width: 100%; margin-top: 8px;" onclick="reserveBook()">Reserve</button>
+                </div>
+            </div>
+
+            <!-- ROOM BOOKING BOT -->
+            <div class="bot-section" id="roomBookingTab" style="display: none;">
+                <div class="bot-title">Study Room Booking</div>
+                <label style="font-size: 12px;">Select Building</label>
+                <select class="select-field" id="buildingSelect">
+                    <option>Main Building</option>
+                    <option>Building A</option>
+                    <option>Building B</option>
+                </select>
+                <label style="font-size: 12px;">Select Time</label>
+                <input type="time" class="input-field" id="roomTime">
+                <button class="btn-small" style="width: 100%;" onclick="bookRoom()">Hold for 10 min</button>
+                <div id="roomConfirm" style="display: none;" class="confirmation-box"></div>
+            </div>
+
+            <!-- TODAY'S CLASSES -->
+            <div class="section" style="margin-top: 20px;">
+                <div class="section-title">Today's Classes</div>
+                <div class="card">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <div class="class-name">BUSINESS ETHICS</div>
+                            <div class="class-details">Ramanuja Building</div>
+                            <div class="class-time">10:00 AM</div>
+                        </div>
+                        <button class="btn-small">Check Attendance</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <div class="class-name">Performing Arts</div>
+                            <div class="class-details">Multipurpose Hall</div>
+                            <div class="class-time">1:00 PM</div>
+                        </div>
+                        <button class="btn-small">Check Attendance</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <div class="class-name">HRM</div>
+                            <div class="class-details">Ramanuja Building</div>
+                            <div class="class-time">11:15 AM</div>
+                        </div>
+                        <button class="btn-small">Check Attendance</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHORTCUTS -->
+            <div class="section">
+                <button class="btn" style="margin-bottom: 8px;" onclick="alert('My Schedule feature coming soon')">Generate AI Summary of the Day</button>
+                <div class="shortcuts">
+                    <button class="shortcut-btn" onclick="alert('Schedule feature coming soon')">📅 My Schedule</button>
+                    <button class="shortcut-btn" onclick="alert('Book search feature coming soon')">📚 Find Book</button>
+                </div>
+            </div>
+
+            <!-- LIVE UPDATE -->
+            <div class="live-update">
+                ✓ Your class at 2 PM has been rescheduled
+            </div>
         </div>
-        
-        <h2 style="text-align: center; color: var(--primary);">Smart Campus Life</h2>
-        <p style="text-align: center; font-size: 14px; color: #666;">Everything a student needs, responsibly delivered.</p>
-        
-        <div class="card">
-            <strong>Privacy Commitment</strong>
-            <p style="font-size: 13px;">IIMBGOne respects Digital Privacy and User Consent. Your data remains yours.</p>
-            <label><input type="checkbox" id="consent"> I accept the ethical data usage policy.</label>
+
+        <!-- CLASS SCHEDULE SCREEN -->
+        <div class="screen home-screen" id="scheduleScreen">
+            <h2 style="margin-bottom: 20px; color: #008B8B;">📅 My Class Schedule</h2>
+            
+            <div class="section">
+                <div class="section-title">Today's Classes</div>
+                <div class="card">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <div class="class-name">BUSINESS ETHICS</div>
+                            <div class="class-details">Ramanuja Building</div>
+                            <div class="class-time">10:00 AM</div>
+                        </div>
+                        <button class="btn-small">Check Attendance</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <div class="class-name">Performing Arts</div>
+                            <div class="class-details">Multipurpose Hall</div>
+                            <div class="class-time">1:00 PM</div>
+                        </div>
+                        <button class="btn-small">Check Attendance</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="class-item">
+                        <div class="class-info">
+                            <div class="class-name">HRM</div>
+                            <div class="class-details">Ramanuja Building</div>
+                            <div class="class-time">11:15 AM</div>
+                        </div>
+                        <button class="btn-small">Check Attendance</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="live-update">
+                ✓ Your class at 2 PM has been rescheduled
+            </div>
         </div>
-        <button class="btn" onclick="checkConsent()">Sign in with Campus SSO</button>
+
+        <!-- PROFILE/PRIVACY SCREEN -->
+        <div class="screen profile-screen" id="profileScreen">
+            <h2>Profile & Privacy Center</h2>
+            
+            <div class="settings-table">
+                <div class="settings-row">
+                    <div class="settings-label">Location</div>
+                    <div class="toggle on" onclick="toggleSetting(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">Medical Docs</div>
+                    <div class="toggle on" onclick="toggleSetting(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-label">Analytics</div>
+                    <div class="toggle on" onclick="toggleSetting(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-retention">
+                <strong>Data Retention:</strong> 1 year
+            </div>
+
+            <button class="btn" style="margin-top: 20px;" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="switchScreen('homeScreen', 0)">
+                <span>🏠</span>
+                <span class="nav-label">Home</span>
+            </div>
+            <div class="nav-item" onclick="switchScreen('scheduleScreen', 2)">
+                <span>📅</span>
+                <span class="nav-label">Schedule</span>
+            </div>
+            <div class="nav-item" onclick="switchScreen('profileScreen', 1)">
+                <span>🔒</span>
+                <span class="nav-label">Privacy</span>
+            </div>
+        </div>
     </div>
 
-    <div id="screen-dash" class="screen">
-        <h3 id="welcome-text">Dashboard</h3>
-        <div class="card" onclick="showScreen('screen-leave')">
-            <strong>AI Leave Request Bot</strong>
-            <span class="ethical-tag">✓ Digital Privacy</span>
-        </div>
-        <div class="card" onclick="showScreen('screen-room')">
-            <strong>Room Booking Bot</strong>
-            <span class="ethical-tag">✓ Fair Resource Access</span>
-        </div>
-        <div class="card">
-            <strong>Library Access</strong>
-            <p>AI Book Search & Reservation</p>
-            <span class="ethical-tag">✓ Ethical Resource Usage</span>
-        </div>
-        <button class="btn" style="background:#e0e0e0; color: #333;">Generate AI Daily Summary</button>
-    </div>
+    <script>
+        let selectedLeaveType = '';
+        let selectedBook = null;
 
-    <div id="screen-leave" class="screen">
-        <h3>AI Leave Bot</h3>
-        <div class="card">
-            <p><strong>Bot:</strong> Please provide the reason for your leave.</p>
-            <input type="text" placeholder="Reason (e.g. Sick Leave)..." style="width:90%; padding:10px; border-radius: 5px; border: 1px solid #ccc;">
-        </div>
-        <p style="font-size: 12px; color: #666;">Medical documents are encrypted and auto-deleted after approval.</p>
-        <button class="btn" onclick="showScreen('screen-dash')">Submit Request</button>
-    </div>
-
-    <div id="screen-room" class="screen">
-        <h3>Room Booking</h3>
-        <div class="card">
-            <strong>Seminar Hall B</strong>
-            <p>Status: Available</p>
-            <button class="btn" onclick="alert('Booking Confirmed. No personal behavior analytics will be stored.')">Book Slot</button>
-        </div>
-        <button class="btn" style="background:#7f8c8d; color: white;" onclick="showScreen('screen-dash')">Back to Home</button>
-    </div>
-
-    <nav id="main-nav" style="display:none;">
-        <div onclick="showScreen('screen-dash')">Home</div>
-        <div onclick="showScreen('screen-room')">Rooms</div>
-        <div onclick="showScreen('screen-leave')">Leave</div>
-    </nav>
-</div>
-
-<script>
-    function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        
-        const titles = {
-            'screen-login': 'IIMBGOne',
-            'screen-dash': 'Dashboard',
-            'screen-leave': 'AI Leave Bot',
-            'screen-room': 'Room Booking'
-        };
-        document.getElementById('header-title').innerText = titles[screenId];
-    }
-
-    function checkConsent() {
-        if(document.getElementById('consent').checked) {
-            showScreen('screen-dash');
-            document.getElementById('main-nav').style.display = 'flex';
-        } else {
-            alert("You must agree to the Ethical Data Policy to continue.");
+        function goToHome() {
+            if (document.getElementById('privacyCheck').checked) {
+                switchScreen('homeScreen', 0);
+            } else {
+                alert('Please agree to the privacy policy to continue');
+            }
         }
-    }
-</script>
 
+        function goToProfile() {
+            switchScreen('profileScreen', 1);
+        }
+
+        function switchScreen(screenId, navIndex) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll('.nav-item')[navIndex].classList.add('active');
+        }
+
+        function switchToLibraryTab(tab) {
+            document.getElementById('bookSearchTab').style.display = tab === 'bookSearch' ? 'block' : 'none';
+            document.getElementById('roomBookingTab').style.display = tab === 'roomBooking' ? 'block' : 'none';
+        }
+
+        function selectLeaveType(type) {
+            selectedLeaveType = type;
+            document.querySelectorAll('.bot-section:first-child .bot-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function submitLeave() {
+            if (!selectedLeaveType) {
+                alert('Please select a leave type');
+                return;
+            }
+            alert(`${selectedLeaveType} leave request submitted! Reference: LV-2026-${Math.floor(Math.random() * 10000)}`);
+        }
+
+        function searchBook() {
+            const query = document.getElementById('searchBook').value.toLowerCase();
+            const books = {
+                'algorithms': { title: 'Introduction to Algorithms', author: 'Thomas H. Cormen', avail: 'Available', loc: 'Section A → Shelf 3' },
+                'strategy': { title: 'Competitive Strategy', author: 'Michael E. Porter', avail: 'Available', loc: 'Section B → Shelf 2' },
+                'business': { title: 'Good Strategy Bad Strategy', author: 'Richard P. Rumelt', avail: 'Checked Out', loc: 'Due: Feb 5' }
+            };
+
+            if (query && books[query]) {
+                selectedBook = books[query];
+                document.getElementById('bookTitle').textContent = selectedBook.title;
+                document.getElementById('bookAuthor').textContent = selectedBook.author;
+                document.getElementById('bookAvail').textContent = selectedBook.avail;
+                document.getElementById('bookAvail').style.color = selectedBook.avail === 'Available' ? '#4caf50' : '#ff9800';
+                document.getElementById('bookLoc').textContent = selectedBook.loc;
+                document.getElementById('bookResult').style.display = 'block';
+            } else {
+                alert('Book not found. Try: "algorithms", "strategy", or "business"');
+            }
+        }
+
+        function reserveBook() {
+            if (selectedBook) {
+                alert(`${selectedBook.title} reserved! Confirmation sent to your email.`);
+            }
+        }
+
+        function bookRoom() {
+            const building = document.getElementById('buildingSelect').value;
+            const time = document.getElementById('roomTime').value;
+            
+            if (!time) {
+                alert('Please select a time');
+                return;
+            }
+
+            const confirmBox = document.getElementById('roomConfirm');
+            confirmBox.textContent = `✓ Your room is confirmed for ${time}`;
+            confirmBox.style.display = 'block';
+        }
+
+        function toggleSetting(element) {
+            element.classList.toggle('on');
+        }
+
+        function logout() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('loginScreen').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        }
+    </script>
 </body>
 </html>
