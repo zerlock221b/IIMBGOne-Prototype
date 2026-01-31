@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IIMBGOne - Ethical Campus AI</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f4f7f6;
+            --text: #333;
+            --white: #ffffff;
+        }
+
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--primary); display: flex; justify-content: center; }
+
+        /* Mobile Container */
+        #phone-wrapper {
+            width: 100vw; height: 100vh; max-width: 450px;
+            background: var(--bg); position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        /* Screen Header */
+        header { background: var(--primary); color: var(--white); padding: 15px; text-align: center; font-weight: bold; }
+
+        /* Content Area */
+        .screen { display: none; padding: 20px; flex: 1; overflow-y: auto; animation: slideIn 0.3s ease-out; }
+        .active { display: block; }
+
+        @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* UI Elements */
+        .btn { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; font-size: 16px; }
+        .card { background: var(--white); padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .ethical-tag { font-size: 11px; color: #27ae60; font-weight: bold; text-transform: uppercase; margin-top: 5px; display: block; }
+
+        /* Navigation Bar */
+        nav { display: flex; background: var(--white); border-top: 1px solid #ddd; padding: 10px 0; }
+        nav div { flex: 1; text-align: center; font-size: 12px; cursor: pointer; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+<div id="phone-wrapper">
+    <header id="header-title">IIMBGOne</header>
+
+    <div id="screen-login" class="screen active">
+        <h2>Welcome to IIMBGOne</h2>
+        <p>Everything a student needs, responsibly delivered.</p>
+        <div class="card">
+            <strong>Privacy Commitment</strong>
+            <p style="font-size: 13px;">We value Digital Privacy. Your data is encrypted and deleted after use.</p>
+            <label><input type="checkbox" id="consent"> I consent to the ethical data policy.</label>
+        </div>
+        <button class="btn" onclick="checkConsent()">Sign in with Campus SSO</button>
+    </div>
+
+    <div id="screen-dash" class="screen">
+        <h3>Hello, Student!</h3>
+        <div class="card" onclick="showScreen('screen-leave')">
+            <strong>AI Leave Request Bot</strong>
+            <span class="ethical-tag">✓ Privacy Protected</span>
+        </div>
+        <div class="card" onclick="showScreen('screen-room')">
+            <strong>Room Booking</strong>
+            <span class="ethical-tag">✓ Fair Resource Access</span>
+        </div>
+        <div class="card">
+            <strong>Daily Attendance</strong>
+            <p>92% - Stay on track!</p>
+        </div>
+        <button class="btn" style="background:#8e44ad">Generate AI Daily Summary</button>
+    </div>
+
+    <div id="screen-leave" class="screen">
+        <h3>AI Leave Bot</h3>
+        <div class="card">
+            <p><strong>Bot:</strong> Why do you need leave today?</p>
+            <input type="text" placeholder="Type here..." style="width:90%; padding:10px;">
+        </div>
+        <p style="font-size: 12px; color: #666;">Note: Medical docs are auto-deleted after approval.</p>
+        <button class="btn" onclick="showScreen('screen-dash')">Submit Request</button>
+    </div>
+
+    <div id="screen-room" class="screen">
+        <h3>Available Rooms</h3>
+        <div class="card">
+            <strong>Seminar Hall A</strong>
+            <p>Status: Available for 2 hours</p>
+            <button class="btn" onclick="alert('Room Reserved! Reserving responsibly.')">Book Now</button>
+        </div>
+        <button class="btn" style="background:#7f8c8d" onclick="showScreen('screen-dash')">Back</button>
+    </div>
+
+    <nav id="main-nav" style="display:none;">
+        <div onclick="showScreen('screen-dash')">Home</div>
+        <div onclick="showScreen('screen-room')">Rooms</div>
+        <div onclick="showScreen('screen-leave')">Leave</div>
+    </nav>
+</div>
+
+<script>
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        
+        // Update header
+        const titles = {
+            'screen-login': 'IIMBGOne',
+            'screen-dash': 'Dashboard',
+            'screen-leave': 'AI Leave Bot',
+            'screen-room': 'Room Booking'
+        };
+        document.getElementById('header-title').innerText = titles[screenId];
+    }
+
+    function checkConsent() {
+        if(document.getElementById('consent').checked) {
+            showScreen('screen-dash');
+            document.getElementById('main-nav').style.display = 'flex';
+        } else {
+            alert("Please accept the Ethical Privacy Agreement first.");
+        }
+    }
+</script>
+
+</body>
+</html>
